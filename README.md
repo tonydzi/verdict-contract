@@ -151,9 +151,9 @@ cofounder, and a fleet of machines that reach consensus with each other and wake
 for money or the irreversible. It was extracted after it survived production, not written as a
 demo — and it runs on its own: nothing here phones home to the rest.
 
-**See how the whole thing fits together → [SYSTEM.md](https://github.com/tonydzi/Palo-Alto-AI-Research-Lab/blob/main/SYSTEM.md)**
+**See how the whole thing fits together → [SYSTEM.md](https://github.com/tonydzi/tonydzi/blob/main/SYSTEM.md)**
 
-Its closest neighbours in the **gates** layer: [`secondop-panel`](https://github.com/tonydzi/secondop-panel) · [`verbatim-citation-gate`](https://github.com/tonydzi/verbatim-citation-gate) · [`claim-check`](https://github.com/tonydzi/claim-check) · [`verified-ops-starter`](https://github.com/tonydzi/verified-ops-starter)
+Its closest neighbours in the **gates** layer: [`verbatim-citation-gate`](https://github.com/tonydzi/verbatim-citation-gate) · [`claim-check`](https://github.com/tonydzi/claim-check) · [`verified-ops-starter`](https://github.com/tonydzi/verified-ops-starter)
 
 <!--ecosystem-map:end-->
 
