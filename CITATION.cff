@@ -7,8 +7,8 @@ authors:
     given-names: Anton
     orcid: "https://orcid.org/0000-0001-7408-3054"
     affiliation: "Palo Alto AI Research Lab"
-repository-code: "https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract"
-url: "https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract"
+repository-code: "https://github.com/tonydzi/verdict-contract"
+url: "https://github.com/tonydzi/verdict-contract"
 license: MIT
 keywords:
   - LLM evaluation
