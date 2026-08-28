@@ -74,12 +74,12 @@ line of it are runnable as `test_verdict_contract.py` (42 cases, exits 0).
 ## Provenance
 
 Built and used daily by Anton Dziatkovskii (founder, non-technical) and Mike, his AI cofounder
-on Claude Code, at [Palo Alto AI Research Lab](https://github.com/Palo-Alto-AI-Research-Lab).
+on Claude Code, at [Palo Alto AI Research Lab](https://github.com/tonydzi).
 The published module is the live one, sanitized: reviewer prompts, machine topology and
 approval routing stay private; the contract is the reusable part.
 
 ## Family
 
-Job-level evidence instead of self-reports: [verified-ops-starter](https://github.com/Palo-Alto-AI-Research-Lab/verified-ops-starter).
-Fabricated-citation detection: [verbatim-citation-gate](https://github.com/Palo-Alto-AI-Research-Lab/verbatim-citation-gate).
-Curated list: [awesome-verified-agents](https://github.com/Palo-Alto-AI-Research-Lab/awesome-verified-agents).
+Job-level evidence instead of self-reports: [verified-ops-starter](https://github.com/tonydzi/verified-ops-starter).
+Fabricated-citation detection: [verbatim-citation-gate](https://github.com/tonydzi/verbatim-citation-gate).
+Curated list: [awesome-verified-agents](https://github.com/tonydzi/awesome-verified-agents).
