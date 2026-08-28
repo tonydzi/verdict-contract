@@ -66,7 +66,7 @@ nothing, so an echoed instruction is inert.
 ## Quickstart
 
 ```bash
-git clone https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract
+git clone https://github.com/tonydzi/verdict-contract
 cd verdict-contract
 python3 test_verdict_contract.py        # 42 cases, exit 0
 ```
@@ -103,7 +103,7 @@ The contract is the reusable part; what changed when is in `CHANGELOG.md`.
 
 ## Roadmap
 
-**Now — [v0.1.0](https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract/releases/tag/v0.1.0).**
+**Now — [v0.1.0](https://github.com/tonydzi/verdict-contract/releases/tag/v0.1.0).**
 `PROMPT_RULE` + strict/weak parser + `exit_code()` in one stdlib file, 42 contract cases, CI on
 three OSes × three Pythons plus a weekly run so rot surfaces without a push.
 
@@ -111,30 +111,30 @@ three OSes × three Pythons plus a weekly run so rot surfaces without a push.
 
 - **More counterexamples.** This contract only knows the failures 42 cases have shown it. The most
   valuable thing anyone can send is a reviewer reply that fools it —
-  [open an issue with the exact text](https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract/issues).
+  [open an issue with the exact text](https://github.com/tonydzi/verdict-contract/issues).
 - **Wrappers for more reviewers.** `examples/review_gate.py` wraps any CLI reviewer today; the
   common asks are a GitHub Action and a pre-commit hook.
 - **Retiring the weak legacy layer.** It can block but never approve — deliberate, and it should
   stop being needed once callers emit the sentinel.
 
 Every noticeable change ships as a new release, so the
-[release feed](https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract/releases) — not the
+[release feed](https://github.com/tonydzi/verdict-contract/releases) — not the
 commit graph — is where you can see whether the contract has moved under you.
 
 ## Who made this
 
-[Palo Alto AI Research Lab](https://github.com/Palo-Alto-AI-Research-Lab) — one founder
+[Palo Alto AI Research Lab](https://github.com/tonydzi) — one founder
 and an AI cofounder running a fleet of autonomous Claude machines, shipping the useful
 pieces for free. How this repo expects a change to be proven, human or agent, is in `AGENTS.md`.
 
 If this saves you one bad merge, **a star helps more than you would think** — we are looking
 for the first ten people who actually run it. Found a case that breaks it? Open an issue at
-https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract/issues with the exact reply
+https://github.com/tonydzi/verdict-contract/issues with the exact reply
 text; a counterexample is the most valuable thing you can send us.
 
-Related: [verified-ops-starter](https://github.com/Palo-Alto-AI-Research-Lab/verified-ops-starter)
+Related: [verified-ops-starter](https://github.com/tonydzi/verified-ops-starter)
 (your job exited 0, prove it did the work) and
-[awesome-verified-agents](https://github.com/Palo-Alto-AI-Research-Lab/awesome-verified-agents).
+[awesome-verified-agents](https://github.com/tonydzi/awesome-verified-agents).
 
 ## Devlog
 
@@ -162,4 +162,4 @@ Its closest neighbours in the **gates** layer: [`break-it-first`](https://github
 This project is built by a human + AI team, and the git log says so: Claude writes most of
 the code, Codex and Grok review it, Gemini feeds the research. Each is credited on a commit
 **only if its output changed that commit's content** — no decorative credits. Lab-wide
-policy, one source for every repo: [AI-CONTRIBUTORS.md](https://github.com/Palo-Alto-AI-Research-Lab/.github/blob/main/AI-CONTRIBUTORS.md).
+policy, one source for every repo: [AI-CONTRIBUTORS.md](https://github.com/tonydzi/.github/blob/main/AI-CONTRIBUTORS.md).
