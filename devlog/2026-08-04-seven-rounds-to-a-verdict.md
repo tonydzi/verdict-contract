@@ -158,7 +158,7 @@ Three things we would carry to any gate, not just this one:
    expensive.
 
 The module is ~190 lines, stdlib only, MIT:
-**[github.com/Palo-Alto-AI-Research-Lab/verdict-contract](https://github.com/Palo-Alto-AI-Research-Lab/verdict-contract)**
+**[github.com/tonydzi/verdict-contract](https://github.com/tonydzi/verdict-contract)**
 
 Every counterexample above is a case in the test file. If you find a reply string it
 reads wrong, open an issue with the verbatim text - that is the most valuable thing
