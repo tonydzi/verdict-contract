@@ -123,7 +123,7 @@ commit graph — is where you can see whether the contract has moved under you.
 
 ## Who made this
 
-[Palo Alto AI Research Lab](https://github.com/tonydzi) — one founder
+[Palo Alto AI Research Lab](https://github.com/tonydzi) — one engineer running operations
 and an AI cofounder running a fleet of autonomous Claude machines, shipping the useful
 pieces for free. How this repo expects a change to be proven, human or agent, is in `AGENTS.md`.
 
