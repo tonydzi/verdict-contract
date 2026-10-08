@@ -73,7 +73,7 @@ line of it are runnable as `test_verdict_contract.py` (42 cases, exits 0).
 
 ## Provenance
 
-Built and used daily by Anton Dziatkovskii (founder, non-technical) and Mike, his AI cofounder
+Built and used daily by Anton Dziatkovskii (operating lead) and Mike, his AI cofounder
 on Claude Code, at [Palo Alto AI Research Lab](https://github.com/tonydzi).
 The published module is the live one, sanitized: reviewer prompts, machine topology and
 approval routing stay private; the contract is the reusable part.
