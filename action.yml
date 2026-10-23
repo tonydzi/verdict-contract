@@ -1,0 +1,14 @@
+name: "Verdict contract check"
+description: "Fail the job unless a reviewer report ends in an explicit APPROVE (exit 0 = APPROVE, 3 = REQUEST_CHANGES, 4 = ambiguous or not stated)."
+inputs:
+  report:
+    description: "Path to the reviewer report file. Read as raw bytes, never normalised."
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Check verdict
+      shell: bash
+      env:
+        REPORT: ${{ inputs.report }}
+      run: python "${{ github.action_path }}/verdict_check.py" "$REPORT"

@@ -22,6 +22,14 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: contract test
         run: python test_verdict_contract.py
+      - name: verdict_check CLI test (byte fidelity)
+        run: python _test_verdict_check.py
+      - name: the Action itself must pass on APPROVE
+        shell: bash
+        run: printf 'fine\n===VERDICT=== APPROVE\n' > "$RUNNER_TEMP/ok.txt"
+      - uses: ./
+        with:
+          report: ${{ runner.temp }}/ok.txt
       - name: the README quickstart must actually work
         shell: bash
         run: |
