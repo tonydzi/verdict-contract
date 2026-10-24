@@ -24,6 +24,8 @@ jobs:
         run: python test_verdict_contract.py
       - name: verdict_check CLI test (byte fidelity)
         run: python _test_verdict_check.py
+      - name: review_gate example test (byte fidelity)
+        run: python _test_review_gate.py
       - name: the Action itself must pass on APPROVE
         shell: bash
         run: printf 'fine\n===VERDICT=== APPROVE\n' > "$RUNNER_TEMP/ok.txt"

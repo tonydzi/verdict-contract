@@ -15,7 +15,12 @@ Exit codes:
     0  APPROVE            -- no blocking issues, safe for automation to proceed
     3  REQUEST_CHANGES    -- blocking issues found
     4  AMBIGUOUS / none   -- the model broke the contract; a human must read it
+    1  reviewer output is not valid UTF-8 (never guessed at)
     2  usage error
+
+Byte fidelity: the reviewer's stdout is captured as BYTES and decoded strictly as
+UTF-8, with no newline translation (text=True would turn CRLF and a lone CR into LF
+before find_verdict sees them, which can change the verdict; see verdict_check.py).
 """
 import subprocess
 import sys
@@ -45,11 +50,18 @@ def main(argv):
         return 0
 
     prompt = TASK + "\n\n--- DIFF ---\n" + diff
-    proc = subprocess.run(argv[1], shell=True, input=prompt,
-                          capture_output=True, text=True)
-    report = proc.stdout
+    proc = subprocess.run(argv[1], shell=True, input=prompt.encode("utf-8"),
+                          capture_output=True)
+    try:
+        report = proc.stdout.decode("utf-8")
+    except UnicodeDecodeError as e:
+        print("review_gate: reviewer output is not valid UTF-8: %s" % e, file=sys.stderr)
+        return 1
 
-    print(report)
+    sys.stdout.flush()
+    sys.stdout.buffer.write(proc.stdout)
+    sys.stdout.buffer.flush()
+    print()
     print("-" * 60)
     print(verdict_line(report))
     # The verdict, not the reviewer's own exit status, decides. A reviewer that
