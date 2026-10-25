@@ -17,7 +17,9 @@ reply: the sentinel must be the only one AND sit on the final non-blank raw
 line. So this CLI reads BYTES and decodes them strictly as UTF-8, with no
 strip, no CRLF->LF translation (no text mode, no universal newlines) and no
 re-encoding. A lone CR before the sentinel is APPROVE on the raw bytes and
-AMBIGUOUS once normalised, so normalising here would change the verdict.
+stays APPROVE when it is turned into LF (universal newlines); only deleting
+the CR gives AMBIGUOUS. Reading bytes keeps the judged bytes identical to the
+bytes a caller hashes or echoes.
 Invalid UTF-8 is an error (exit 1), never a guess.
 
 Used by action.yml in this repo; stdlib only. Callers that hash the report
