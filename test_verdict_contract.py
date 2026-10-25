@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """The verdict CONTRACT test: structure, not shape-guessing.
 
-Every case below is a counterexample that was reproduced live against a
+The original regression cases below were reproduced live against a
 shape-guessing parser, across seven rounds of adversarial review by two
-independent vendor models. This test fails if any of them regresses.
+independent vendor models. The line-ending section adds generated token
+sequences and an explicit CR regression case.
 
 Run:  python3 test_verdict_contract.py     (exit 0 = green)
 """
+import itertools
 import os
 import sys
 
@@ -90,6 +92,17 @@ NONE_CASES = [
     "VERDICT: APPROVE_WITH_NITS",                    # weak layer: \b keeps suffixes out
 ]
 
+# --- line endings: normalising a reply must not change its exit code ---------------
+# A bounded version of the 4,851,294-sequence search from issue #1: every sequence of
+# 1 to 3 of these blocks that contains a CR is judged raw and after CRLF -> LF, then
+# lone CR -> LF. str.splitlines() already breaks a line at a lone CR, so both must give
+# the same exit code. Deleting CR instead of turning it into LF, or splitting the raw
+# reply at LF only, makes some of these sequences flip.
+BLOCKS = ["ok", "\r", "\n", "\r\n", "===VERDICT===", " ", "APPROVE", "REQUEST_CHANGES",
+          "```", "VERDICT:", "\t", "**", "> ", "# "]
+# Two of the 14 blocks hold a CR, so 14**k - 12**k sequences of length k contain one.
+CR_SEQUENCES = sum(14 ** k - 12 ** k for k in (1, 2, 3))   # 2 + 52 + 1016 = 1070
+
 
 def main():
     fails = []
@@ -165,6 +178,29 @@ def main():
     if "find_verdict" not in src:
         fails.append("examples/review_gate.py does not use the shared parser")
 
+    # --- 4. line endings -------------------------------------------------------------
+    checked = 0
+    for k in (1, 2, 3):
+        for seq in itertools.product(BLOCKS, repeat=k):
+            raw = "".join(seq)
+            if "\r" not in raw:
+                continue
+            checked += 1
+            norm = raw.replace("\r\n", "\n").replace("\r", "\n")
+            got = vc.exit_code(vc.find_verdict(raw))
+            want = vc.exit_code(vc.find_verdict(norm))
+            if got != want:
+                fails.append("line endings: %r exits %d raw, %d normalised"
+                             % (raw, got, want))
+    if checked != CR_SEQUENCES:
+        fails.append("line endings: %d sequences checked, want %d"
+                     % (checked, CR_SEQUENCES))
+    # The first sequence that either change named at BLOCKS flips, planted verbatim: a
+    # lone CR parts a marker from its value as LF does, so it is a bare marker, not an
+    # approve.
+    if vc.find_verdict("===VERDICT===\rAPPROVE") != AMB:
+        fails.append("a lone CR let a value join a bare marker on one line")
+
     if fails:
         print("FAIL (%d):" % len(fails))
         for f in fails:
@@ -173,7 +209,8 @@ def main():
     n = len(STRICT) + len(WEAK_BLOCKS) + len(WEAK_APPROVES_TO_AMB) + \
         len(AMBIGUOUS_CASES) + len(NONE_CASES)
     print("OK - %d contract cases (strict/weak/ambiguous/none) plus precedence, "
-          "fence-desync, self-poisoning, loud rendering and exit-code gate" % n)
+          "fence-desync, self-poisoning, loud rendering, exit-code gate and %d "
+          "line-ending sequences" % (n, checked))
     return 0
 
 
