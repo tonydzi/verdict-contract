@@ -20,7 +20,9 @@ Exit codes:
 
 Byte fidelity: the reviewer's stdout is captured as BYTES and decoded strictly as
 UTF-8, with no newline translation (text=True would turn CRLF and a lone CR into LF
-before find_verdict sees them, which can change the verdict; see verdict_check.py).
+before find_verdict sees them). No case where that flips the exit code was found (see the
+PR and _test_review_gate.py), but the bytes you hash or echo must be the bytes the reviewer
+sent, so we read bytes; see verdict_check.py).
 """
 import subprocess
 import sys
