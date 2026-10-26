@@ -134,6 +134,20 @@ def main():
     both = "the old form was VERDICT: APPROVE\n...\n===VERDICT=== REQUEST_CHANGES"
     if vc.find_verdict(both) != R:
         fails.append("sentinel did not take precedence over weak prose")
+    # A strict approve must not erase a legacy blocking verdict.
+    # Synthetic counterexample: the old parser returned APPROVE / exit 0.
+    for raw in ("Blocking issue: the change deletes existing user data.\n"
+                "VERDICT: REQUEST_CHANGES\n===VERDICT=== APPROVE",
+                "Final verdict: ===VERDICT=== REQUEST_CHANGES\n"
+                "===VERDICT=== APPROVE"):
+        got = vc.find_verdict(raw)
+        if got != R or vc.exit_code(got) != 3:
+            fails.append("strict approve erased a legacy block: %r" % raw)
+    quoted_block = ("The obsolete example was:\n```text\n"
+                    "VERDICT: REQUEST_CHANGES\n```\n"
+                    "===VERDICT=== APPROVE")
+    if vc.find_verdict(quoted_block) != R:
+        fails.append("strict approval depended on stripping a fenced legacy block")
     # blocking is safe from ANY position and outranks junk/contradiction
     # (the asymmetry is intentional: RC > junk > APPROVE)
     for raw in ("===VERDICT=== REQUEST_CHANGES\nActually it's fine.",

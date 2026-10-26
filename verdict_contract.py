@@ -33,7 +33,8 @@ THE FIX IS STRUCTURAL, IN FOUR PARTS
      a false block costs a re-read, a false approve ships a bug.
   3. WEAK LAYER NEVER APPROVES -- if the model drops the sentinel and writes an
      old-style "VERDICT: ..." in prose, a blocking verdict still blocks (safe
-     direction) but an approving one degrades to AMBIGUOUS. The strict layer reads
+     direction) but an approving one degrades to AMBIGUOUS. A legacy block also
+     vetoes a strict APPROVE, even in a quote. The strict layer reads
      the RAW reply: fence detection is undecidable on nested/unbalanced fences and
      once flipped a real REQUEST_CHANGES into an APPROVE in production. Best-effort
      fence stripping feeds only the weak layer, which cannot approve anyway.
@@ -79,7 +80,8 @@ _SENTINEL_MARK = re.compile(r"^[\s#>*\-]*={2,}\s*VERDICT\s*={2,}(.*)$", re.IGNOR
 _PLACEHOLDER = "<value>"
 _REST_DECOR = " \t:*`."
 
-# Weak legacy layer, used ONLY when no sentinel line exists at all. Same line only:
+# Legacy pattern: used by the weak layer, and as a raw blocking veto before
+# a strict approve. Same line only:
 # the gap class has no \n (that newline smuggling was the original bug). Trailing \b
 # keeps APPROVE_WITH_NITS / REQUEST_CHANGES_PLEASE from matching.
 _WEAK = re.compile(
@@ -159,6 +161,12 @@ def find_verdict(text):
         if any(v is None for v in values):
             return AMBIGUOUS        # sentinel with a value outside the enum
         if len(sentinels) == 1 and sentinels[0][0] == last_nonblank:
+            # A final approve cannot erase an explicit legacy blocking verdict
+            # elsewhere in the RAW review, including quotes. No fence detector
+            # participates in strict approval; a false block costs a re-read.
+            if any(_norm(match.group(1)) == REQUEST_CHANGES
+                   for match in _WEAK.finditer(text or "")):
+                return REQUEST_CHANGES
             return APPROVE
         return AMBIGUOUS            # repeated / not final -> not a clean approve
     # No sentinel anywhere -> weak legacy layer (old-style "VERDICT: ..." prose).
