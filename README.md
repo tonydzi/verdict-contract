@@ -103,8 +103,8 @@ The contract is the reusable part; what changed when is in `CHANGELOG.md`.
 
 ## Known limits
 
-- **Non-English prompts (reported, not yet explained).** In one external run (issue #8) two German review prompts were sent with `PROMPT_RULE` as the last block. Two of three model lines ended with a localized or unmarked verdict line (`URTEIL: ...`, bare `REQUEST_CHANGES`) instead of the sentinel, and `verdict_check.py` exited 4. Exit 4 blocks, so nothing was approved. Sample: 2 prompts, 1 call per model line, 6 replies; an English control was not run, so the cause is not established.
-- The parser does not accept localized labels on purpose: a wider gate trusts more. A sender-side guard that requires `PROMPT_RULE` verbatim and rejects look-alike patterns in the prompt is the pattern the reporter uses.
+- **Non-English prompts (reported, not yet explained).** In one external run (issue #8) two German review prompts were sent with `PROMPT_RULE` as the last block. Two of three model lines ended with a localized or unmarked verdict line (`URTEIL: ...`, bare `REQUEST_CHANGES`) instead of the sentinel, and `verdict_check.py` exited 4. Exit 4 blocks, so nothing was approved. Sample: 2 prompts, 1 call per model line, 6 replies. The same reporter then ran an English control (same material, instructions translated): none of the 6 replies exited 4 (3 ended on the sentinel, 3 on `VERDICT: REQUEST_CHANGES`, read as exit 3 by the weak layer), against 4 of 6 in German. That is two prompts and one call per cell, so it does not establish that the language caused the difference.
+- The parser does not accept localized labels on purpose: a wider gate trusts more. A sender-side guard that requires `PROMPT_RULE` verbatim and rejects look-alike patterns in the prompt is the pattern the reporter uses; `examples/prompt_guard.py` (contributed by @b7n0de, #9) is that guard.
 
 ## Roadmap
 

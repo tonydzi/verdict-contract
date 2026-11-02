@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `examples/prompt_guard.py` - checks a prompt before it is sent: `PROMPT_RULE` verbatim, no look-alike verdict format anywhere in it. Thanks @b7n0de (#9), who found the case in #8.
+
 ## v0.1.0 - 2026-08-04
 
 First public release. Sanitized from a module that has gated every code review across
