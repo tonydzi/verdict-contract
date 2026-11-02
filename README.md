@@ -101,6 +101,11 @@ Four of those rounds found a real hole in code we already believed was correct.
 Not included, on purpose: our reviewer prompts, machine topology, and approval routing.
 The contract is the reusable part; what changed when is in `CHANGELOG.md`.
 
+## Known limits
+
+- **Non-English prompts (reported, not yet explained).** In one external run (issue #8) two German review prompts were sent with `PROMPT_RULE` as the last block. Two of three model lines ended with a localized or unmarked verdict line (`URTEIL: ...`, bare `REQUEST_CHANGES`) instead of the sentinel, and `verdict_check.py` exited 4. Exit 4 blocks, so nothing was approved. Sample: 2 prompts, 1 call per model line, 6 replies; an English control was not run, so the cause is not established.
+- The parser does not accept localized labels on purpose: a wider gate trusts more. A sender-side guard that requires `PROMPT_RULE` verbatim and rejects look-alike patterns in the prompt is the pattern the reporter uses.
+
 ## Roadmap
 
 **Now — [v0.1.0](https://github.com/tonydzi/verdict-contract/releases/tag/v0.1.0).**
