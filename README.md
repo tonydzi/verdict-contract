@@ -1,5 +1,66 @@
 # verdict-contract
 
+A small Python file that reads an AI code reviewer's answer and turns it into a safe pass/fail exit code.
+
+**Who it's for:** anyone who lets an AI model review code and wants automation to merge only on a real APPROVE.
+**What you get:** one stdlib-only file, `verdict_contract.py`. It gives the model one strict way to answer, and it treats anything unclear as "do not approve".
+
+## Quick start
+1. Install Python 3.8 or newer. Nothing else.
+2. Clone it: `git clone https://github.com/tonydzi/verdict-contract` and open the folder.
+3. Run the tests: `python3 test_verdict_contract.py`
+
+**Done when:** the last line starts with `OK - 42 contract cases` and the exit code is 0. To gate a real reviewer, run `git diff | python3 examples/review_gate.py 'codex exec --model gpt-5'` and read the exit code: 0 approve, 3 changes requested, 4 the model broke the format.
+
+> Want an AI agent to do it for you? Paste this to Claude Code / Codex / Cursor:
+> "Read the 'For AI agents' section of https://github.com/tonydzi/verdict-contract and set it up for me."
+
+## For AI agents
+
+### Preconditions
+- Python 3.8+ (checked with 3.12), standard library only. Use `python` instead of `python3` on Windows.
+- No account, key or network for the module itself.
+- Ask the human: which reviewer command they use (it must take a prompt on stdin and print a review), and whether they want the GitHub Action.
+
+### Install
+```
+git clone https://github.com/tonydzi/verdict-contract
+cd verdict-contract
+```
+To use it in another project, copy `verdict_contract.py` there. Always import the prompt rule, never retype it:
+```python
+from verdict_contract import PROMPT_RULE, find_verdict, exit_code
+prompt = MY_REVIEW_TASK + "\n\n" + PROMPT_RULE
+report = my_model.run(prompt, diff)
+sys.exit(exit_code(find_verdict(report)))
+```
+
+### Configure
+- Wrap a CLI reviewer: `git diff | python3 examples/review_gate.py '<reviewer command>'` (command supplied by the human).
+- Check a saved report file: `python3 verdict_check.py <report-file>` (or `-` for stdin).
+- GitHub Actions: this repo ships `action.yml` with one input, `report` (path to the reviewer report). Use `uses: tonydzi/verdict-contract@main` with `with: report: <path>`; ask the human which ref to pin.
+- Exit codes: `0` approve, `3` request changes, `4` ambiguous or no verdict, `1` unreadable report, `2` usage error.
+
+### Verify
+```
+python3 test_verdict_contract.py
+python3 _test_verdict_check.py
+python3 _test_review_gate.py
+python3 _test_prompt_guard.py
+```
+Expected: all four exit 0 (real run 2026-11-13: yes). The first ends with `OK - 42 contract cases`. Quick check by hand: a file containing the single line `===VERDICT=== APPROVE` passed to `python3 verdict_check.py <file>` prints `VERDICT: APPROVE` and exits 0; a file without a verdict exits 4.
+
+### Uninstall / rollback
+Delete the cloned folder, or remove the copied `verdict_contract.py` and the workflow step that calls the action.
+
+### Rules for the agent
+- Do not loosen the parser so that APPROVE is easier to reach. Blocking must always win; see `AGENTS.md`.
+- Never retype `PROMPT_RULE` into a caller; import it.
+- Treat exit 4 as "do not merge", never as a pass.
+- Any change needs a new counterexample case in `test_verdict_contract.py`.
+
+## Details
+
 **Your LLM reviewer said APPROVE. Did it?**
 
 If you pipe a diff to a model and grep its reply for `VERDICT: APPROVE`, you do not have a
