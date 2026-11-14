@@ -8,9 +8,10 @@ A small Python file that reads an AI code reviewer's answer and turns it into a 
 ## Quick start
 1. Install Python 3.8 or newer. Nothing else.
 2. Clone it: `git clone https://github.com/tonydzi/verdict-contract` and open the folder.
-3. Run the tests: `python3 test_verdict_contract.py`
+3. Run the tests: `python3 test_verdict_contract.py` (on Windows use `python`).
+4. Try it on a fake review: save a text file `report.txt` whose only line is `===VERDICT=== APPROVE`, then run `python3 verdict_check.py report.txt`.
 
-**Done when:** the last line starts with `OK - 42 contract cases` and the exit code is 0. To gate a real reviewer, run `git diff | python3 examples/review_gate.py 'codex exec --model gpt-5'` and read the exit code: 0 approve, 3 changes requested, 4 the model broke the format.
+**Done when:** the test run's last line starts with `OK - 42 contract cases` and the exit code is 0, and step 4 prints `VERDICT: APPROVE`. Change the file to `looks fine` and it prints a `(not stated)` warning instead, with exit code 4: that is the safe default, not a failure. To gate a real reviewer, run `git diff | python3 examples/review_gate.py 'codex exec --model gpt-5'` and read the exit code: 0 approve, 3 changes requested, 4 the model broke the format.
 
 > Want an AI agent to do it for you? Paste this to Claude Code / Codex / Cursor:
 > "Read the 'For AI agents' section of https://github.com/tonydzi/verdict-contract and set it up for me."
@@ -29,7 +30,9 @@ cd verdict-contract
 ```
 To use it in another project, copy `verdict_contract.py` there. Always import the prompt rule, never retype it:
 ```python
+import sys
 from verdict_contract import PROMPT_RULE, find_verdict, exit_code
+# MY_REVIEW_TASK (your review instructions) and my_model (your model call) are placeholders
 prompt = MY_REVIEW_TASK + "\n\n" + PROMPT_RULE
 report = my_model.run(prompt, diff)
 sys.exit(exit_code(find_verdict(report)))
@@ -48,7 +51,7 @@ python3 _test_verdict_check.py
 python3 _test_review_gate.py
 python3 _test_prompt_guard.py
 ```
-Expected: all four exit 0 (real run 2026-11-13: yes). The first ends with `OK - 42 contract cases`. Quick check by hand: a file containing the single line `===VERDICT=== APPROVE` passed to `python3 verdict_check.py <file>` prints `VERDICT: APPROVE` and exits 0; a file without a verdict exits 4.
+Expected: all four exit 0 (real run 2026-11-13: yes). The first ends with `OK - 42 contract cases`. Quick check by hand: a file containing the single line `===VERDICT=== APPROVE` passed to `python3 verdict_check.py <file>` prints `VERDICT: APPROVE` and exits 0; a file without a verdict prints `VERDICT: (not stated) !! ...` and exits 4.
 
 ### Uninstall / rollback
 Delete the cloned folder, or remove the copied `verdict_contract.py` and the workflow step that calls the action.
@@ -67,7 +70,7 @@ If you pipe a diff to a model and grep its reply for `VERDICT: APPROVE`, you do 
 gate — you have a coin flip that fails in the dangerous direction, and `test_verdict_contract.py`
 shows five ways it does.
 
-This repo is the stdlib-only module that replaced ours — 197 lines in `verdict_contract.py` —
+This repo is the stdlib-only module that replaced ours — 205 lines in `verdict_contract.py` —
 plus the 42 counterexamples that forced every line of it, all of them runnable as
 `test_verdict_contract.py`.
 
